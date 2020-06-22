@@ -237,10 +237,9 @@ characters. The normal characters remain active for LaTeX commands.
   {\RequirePackage{color}}
 \usepackage{colortbl}
 \usepackage{wrapfig}
-\usepackage{ifxetex}
-\ifxetex
+\usepackage{iftex}
+\ifluatex
   \usepackage{fontspec}
-  \usepackage{xunicode}
   \catcode`⃥=\active \def⃥{\textbackslash}
   \catcode`❴=\active \def❴{\{}
   \catcode`❵=\active \def❵{\}}
@@ -253,29 +252,46 @@ characters. The normal characters remain active for LaTeX commands.
   </xsl:if>
   <xsl:if test="not($romanFont='')">
     \setromanfont{<xsl:value-of select="$romanFont"/>}
-  </xsl:if>
 \else
-  \IfFileExists{utf8x.def}%
-   {\usepackage[utf8x]{inputenc}
-      \PrerenderUnicode{–}
-    }%
-   {\usepackage[utf8]{inputenc}}
-  <xsl:call-template name="latexBabel"/>
-  \usepackage[T1]{fontenc}
-  \usepackage{float}
-  \usepackage[]{ucs}
-  \uc@dclc{8421}{default}{\textbackslash }
-  \uc@dclc{10100}{default}{\{}
-  \uc@dclc{10101}{default}{\}}
-  \uc@dclc{8491}{default}{\AA{}}
-  \uc@dclc{8239}{default}{\,}
-  \uc@dclc{20154}{default}{ }
-  \uc@dclc{10148}{default}{>}
-  \def\textschwa{\rotatebox{-90}{e}}
-  \def\textJapanese{}
-  \def\textChinese{}
-  \IfFileExists{tipa.sty}{\usepackage{tipa}}{}
-  \usepackage{times}
+	\ifxetex
+  		\usepackage{fontspec}
+  		\usepackage{xunicode}
+  		\catcode`⃥=\active \def⃥{\textbackslash}
+	  	\catcode`❴=\active \def❴{\{}
+  		\catcode`❵=\active \def❵{\}}
+	  	\def\textJapanese{\fontspec{<xsl:value-of select="$japaneseFont"/>}}
+  		\def\textChinese{\fontspec{<xsl:value-of select="$chineseFont"/>}}
+	  	\def\textKorean{\fontspec{<xsl:value-of select="$koreanFont"/>}}
+  		\setmonofont{<xsl:value-of select="$typewriterFont"/>}
+  		<xsl:if test="not($sansFont='')">
+    		\setsansfont{<xsl:value-of select="$sansFont"/>}
+  		</xsl:if>
+  		<xsl:if test="not($romanFont='')">
+    		\setromanfont{<xsl:value-of select="$romanFont"/>}
+  		</xsl:if>
+		\else
+  			\IfFileExists{utf8x.def}%
+   		{\usepackage[utf8x]{inputenc}
+    		  \PrerenderUnicode{–}
+	    	}%
+   		{\usepackage[utf8]{inputenc}}
+ 		 <xsl:call-template name="latexBabel"/>
+  		\usepackage[T1]{fontenc}
+  		\usepackage{float}
+  		\usepackage[]{ucs}
+  		\uc@dclc{8421}{default}{\textbackslash }
+  		\uc@dclc{10100}{default}{\{}
+	  	\uc@dclc{10101}{default}{\}}
+  		\uc@dclc{8491}{default}{\AA{}}
+	  	\uc@dclc{8239}{default}{\,}
+  		\uc@dclc{20154}{default}{ }
+	  	\uc@dclc{10148}{default}{>}
+  		\def\textschwa{\rotatebox{-90}{e}}
+	  	\def\textJapanese{}
+  		\def\textChinese{}
+	  	\IfFileExists{tipa.sty}{\usepackage{tipa}}{}
+  		\usepackage{times}
+  	\fi
 \fi
 \def\exampleFont{\ttfamily\small}
 \DeclareTextSymbol{\textpi}{OML}{25}
